@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:ToDo="clr-namespace:To_do_List"
+             x:Class="To_do_List.ToDoView"
+             Title="{Binding PageTitle}"
+             x:Name="ToDoViewPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add item" Order="Primary" Priority="0" Command="{Binding AddItemCommand}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ToDo:BoolToColorConverter x:Key="BoolToColor"/>
+            <ToDo:BoolToTextDecorationConverter x:Key="BoolToTextDecoration"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ListView SeparatorVisibility="None" BackgroundColor="White" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}">
+            <ListView.Header>
+                <StackLayout MinimumHeightRequest="100" Padding="10">
+                    <ProgressBar x:Name="progressBar" ProgressColor="#fc0810"/>
+                    <Label Text="{Binding CompletedHeader}" TextColor="#1b1091"/>
+                </StackLayout>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.ContextActions>
+                            <MenuItem Text="Complete" Command="{Binding Path=BindingContext.MarkAsCompletedCommand,Source={x:Reference ToDoViewPage}}"
+                                  CommandParameter="{Binding .}"/>
+                        </ViewCell.ContextActions>
+                        <Frame CornerRadius="10" HasShadow="True" Margin="3" BackgroundColor="{Binding IsCompleted , Converter={StaticResource BoolToColor}}"
+                               Padding="0">
+                            <StackLayout Padding="10,5,0,0" Margin="8,5" MinimumHeightRequest="100">
+                                <Label Text="{Binding Name}" FontSize="20" VerticalTextAlignment="Center" 
+                               TextDecorations="{Binding IsCompleted, Converter={StaticResource BoolToTextDecoration}}" TextColor="White"/>
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>
